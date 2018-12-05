@@ -101,17 +101,11 @@ else:
   except ImportError:
     cythonize = lambda *args, **kwargs: []
 
-REQUIRED_PACKAGES_PY2_ONLY = [
-    'avro>=1.8.1,<2.0.0',
-    'dill>=0.2.6,<=0.2.8.2',
-]
-
-REQUIRED_PACKAGES_PY3_ONLY = [
-    'avro-python3>=1.8.1,<2.0.0',
-    'dill==0.2.9.dev0'
-]
-
 REQUIRED_PACKAGES = [
+    'avro==1.8.2;python_version<="2.7"',
+    'avro-python3==1.8.2;python_version>="3.4"',
+    'dill>=0.2.6,<=0.2.8.2;python_version<="Z.7"',
+    'dill==0.2.9.dev0;python_version>="3.4"',
     'crcmod>=1.7,<2.0',
     'fastavro>=0.21.4,<0.22',
     'grpcio>=1.8,<2',
@@ -147,16 +141,18 @@ GCP_REQUIREMENTS = [
     'google-cloud-bigquery>=1.6.0,<1.7.0',
 ]
 
-if sys.version_info[0] == 2:
-  REQUIRED_PACKAGES = REQUIRED_PACKAGES + REQUIRED_PACKAGES_PY2_ONLY
-  DEPENDENCY_LINKS = []
-elif sys.version_info[0] >= 3:
-  REQUIRED_PACKAGES = REQUIRED_PACKAGES + REQUIRED_PACKAGES_PY3_ONLY
-  # TODO(BEAM-6135): Revert when new dill version released
-  DEPENDENCY_LINKS = ['git+https://github.com/uqfoundation/dill.git'
-                      '@7a73fbe3d6aa445f93f58f266687b7315d14a3ac'
-                      '#egg=dill-0.2.9.dev0']
+# if sys.version_info[0] == 2:
+#   DEPENDENCY_LINKS = []
+# elif sys.version_info[0] >= 3:
+#   # TODO(BEAM-6135): Revert when new dill version released
+#   DEPENDENCY_LINKS = ['git+https://github.com/uqfoundation/dill.git'
+#                       '@7a73fbe3d6aa445f93f58f266687b7315d14a3ac'
+#                       '#egg=dill-0.2.9.dev0']
 
+
+DEPENDENCY_LINKS = ['git+https://github.com/uqfoundation/dill.git'
+                    '@7a73fbe3d6aa445f93f58f266687b7315d14a3ac'
+                    '#egg=dill-0.2.9.dev0;python_version>=3.4']
 
 # We must generate protos after setup_requires are installed.
 def generate_protos_first(original_cmd):
